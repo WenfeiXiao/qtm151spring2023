@@ -88,6 +88,41 @@ The quiz will use the Formula 1 dataset
 with column names and data types
 - You will need to use the SQL command ``` CREATE TABLE ```
 
+-- SQLBook: Code
+-- Active: 1679500592969@@127.0.0.1@5432@postgres@public
+
+
+DROP TABLE IF EXISTS us_congress_members;
+
+-- Note in SQL the codebook is also called a "dictionary"
+-- The option PRIMARY KEY indicates that this is the unique identifier
+
+CREATE TABLE us_congress_members (
+        member_id    int PRIMARY KEY,
+        full_name    varchar(30),
+        last_name    varchar(30),
+        member_title varchar(30),
+        state        varchar(30),
+        party_name   varchar(30),
+        chamber      varchar(30)
+);
+
+-- (ii) The maximum length of the strings is another for of quality control
+-- (iii) Include any column names with upper case in double quotations "..."
+
+DROP TABLE IF EXISTS bills_actions;
+
+-- if not null, something must be filled in, congress have capitcal, so use double quotation
+
+CREATE TABLE bills_actions (
+        "Congress"  int NOT NULL,
+        bill_number int ,
+        bill_type   varchar(30),
+        action      varchar(1000),
+        main_action varchar(50),
+        object      varchar(30),
+        member_id   int
+);
 -- SQLBook: Markup
 
 <font size = "5">
@@ -101,6 +136,17 @@ from ".csv" files using the command <br>
 - Display the dataset using ``` SELECT * FROM .... ```
 - See Lecture 18 for more details
 
+-- SQLBook: Code
+-- Active: 1680065980192@@127.0.0.1@5432@postgres@public
+
+COPY us_congress_members
+FROM '/private/tmp/data/us_congress_members.csv'
+WITH (DELIMITER ',', FORMAT csv, HEADER MATCH);
+
+-- SQLBook: Code
+-- Active: 1680065980192@@127.0.0.1@5432@postgres@public
+SELECT * FROM us_congress_members;
+
 -- SQLBook: Markup
 <font size = "5">
 
@@ -108,6 +154,33 @@ from ".csv" files using the command <br>
 
 - Subset one of the above datasets using ``` WHERE ```
 - Then sort the datasets in ascending or descending order 
+-- SQLBook: Code
+SELECT * FROM us_congress_members
+WHERE member_id >= 100
+ORDER BY member_id DESC; 
+
+-- The WHERE command evaluates logical conditions to subset rows
+SELECT * FROM drivers
+WHERE nationality = 'German';
+
+-- Evalute OR conditions
+SELECT * FROM drivers
+WHERE (nationality = 'United States') OR (nationality = 'Indian');
+
+-- Evaluate AND conditions
+SELECT * FROM drivers
+WHERE (nationality = 'German') AND (driver_id = 2);
+
+
+
+-- Order in ascending order of victories
+-- Remember that * means that all columns are selected
+SELECT * FROM drivers
+ORDER BY victories ASC;
+
+-- Order in descending order of victories
+SELECT * FROM drivers
+ORDER BY victories DESC;
 -- SQLBook: Markup
 <font size = "5">
 
@@ -120,6 +193,28 @@ from ".csv" files using the command <br>
 
 
 HINT: See the end of lectures 17
+-- SQLBook: Code
+-- HAVING is the command you use to subset *after* aggregating
+-- This differs from WHERE, which is used to subset *before* aggregating
+-- SQL differentiates the two types of subsetting
+
+SELECT nationality,
+       SUM(victories) AS sum_victories,
+       AVG(victories) AS mean_victories,
+       MIN(victories) AS min_victories,
+       MAX(victories) AS max_victories
+FROM drivers
+WHERE nationality = 'German'
+GROUP BY nationality
+HAVING SUM(victories) > 50;
+
+
+SELECT SUM(victories) AS sum_victories,
+       COUNT(*) AS num_rows,
+       AVG(victories) AS mean_victories,
+       MIN(victories) AS min_victories,
+       MAX(victories) AS max_victories
+FROM drivers;
 -- SQLBook: Markup
 <font size = "5">
 
