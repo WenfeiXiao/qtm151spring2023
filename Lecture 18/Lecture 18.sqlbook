@@ -60,6 +60,8 @@ CREATE TABLE us_congress_members (
 
 DROP TABLE IF EXISTS bills_actions;
 
+-- if not null, something must be filled in, congress have capitcal, so use double quotation
+
 CREATE TABLE bills_actions (
         "Congress"  int NOT NULL,
         bill_number int ,
@@ -92,8 +94,7 @@ CREATE TABLE bills_subjects(
     bill_number int,
     bill_type varchar(30),
     bill_subject varchar(30)
-)
-
+); 
 -- SQLBook: Markup
 # <span style="color:darkblue"> II. Import CSV into SQL </span>
 
@@ -164,8 +165,9 @@ SELECT * FROM us_congress_members
 -- FROM 'D:\GitHub\qtm151spring2023\Lecture 18\data\us_congress_members.csv'
 -- WITH (DELIMITER ',', FORMAT csv, HEADER MATCH);
 
-
-
+COPY us_congress_members
+FROM '/private/tmp/data/us_congress_members.csv'
+WITH (DELIMITER ',', FORMAT csv, HEADER MATCH); 
 
 
 -- SQLBook: Markup
@@ -250,7 +252,7 @@ Merge Databases
 SELECT * 
 FROM bills_actions
 LEFT JOIN us_congress_members
-ON bills_actions.member_id  = bills_actions.member_id;
+ON us_congress_members.member_id  = bills_actions.member_id;
 
 -- Note: This command may take a few seconds to run. This is normal
 -- In the instructor's computer this took 2 min but may take more 
