@@ -205,6 +205,8 @@ SELECT nationality,
        MAX(victories) AS max_victories
 FROM drivers
 GROUP BY nationality;
+-- SQLBook: Code
+
 -- SQLBook: Markup
 <font size = "5">
 
