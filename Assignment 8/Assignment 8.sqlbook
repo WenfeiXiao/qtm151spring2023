@@ -45,7 +45,7 @@ CREATE TABLE results (
 
 
 COPY results
-FROM '//private/tmp/data/lap_times.csv'
+FROM '//private/tmp/data_raw/lap_times.csv'
 WITH (DELIMITER ',', FORMAT csv, HEADER MATCH);
 
 
@@ -82,7 +82,7 @@ CREATE TABLE drivers (
 
 
 COPY drivers
-FROM '/private/tmp/data/drivers.csv'
+FROM '/private/tmp/data_raw/drivers.csv'
 WITH (DELIMITER ',', FORMAT csv, HEADER MATCH);
 
 
